@@ -1,0 +1,20 @@
+# Thư mục của Visual Studio
+.vs/
+
+# Thư mục build tạm
+bin/
+obj/
+
+# Các file cấu hình không cần thiết
+*.user
+*.suo
+*.cache
+*.log
+
+# Các file database tạm
+*.mdf
+*.ldb
+*.sqlite
+
+# Các file xuất API
+*.http
