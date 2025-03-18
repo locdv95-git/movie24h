@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Movie24h_API.Data;
 using Movie24h_API.Model;
@@ -16,13 +17,22 @@ namespace Movie24h_API.Controllers {
 
         // GET: api/Members
         [HttpGet]
+        [Authorize]
         [Route("MembersList")]
         public async Task<ActionResult<List<Member>>> Get() {
-            var members = await _context.Members.ToListAsync();
-            return Ok(members);
+            try {
+                var members = await _context.Members.ToListAsync();
+                if(members.Count == 0) {
+                    return NotFound("No data found...");
+                }
+                return Ok(members);
+            } catch(Exception ex) {
+                return BadRequest(ex.Message);
+            }
         }
 
         // GET: api/Members/12345
+        [Authorize]
         [HttpGet]
         [Route("MemberDetail")]
         public async Task<ActionResult<Member>> Get(string id) {
