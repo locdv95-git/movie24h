@@ -2,7 +2,8 @@
 
 namespace Movie24h_API.Model {
     public class Member {
-        [Key][MaxLength(36)]
+        [Key]
+        [MaxLength(36)]
         public required string Id { get; set; }
         [MaxLength(100)]
         public string? FullName { get; set; }
