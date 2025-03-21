@@ -2,12 +2,27 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Movie24h_API.Data;
+using Movie24h_API.Helpers;
+using Movie24h_API.Repositories.User;
+using Movie24h_API.Services;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
 #region CONFIG DB CONNECT
 builder.Services.AddDbContext<Movie24hContext>();
+#endregion
+
+
+#region CONFIG DEPENDENCY INJECTION
+// Register Repository
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+
+// Register Service
+builder.Services.AddScoped<AuthService>();
+builder.Services.AddScoped<UserService>();
+
+builder.Services.AddScoped<JwtHelper>();
 #endregion
 
 

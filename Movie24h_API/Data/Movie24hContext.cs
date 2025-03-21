@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Movie24h_API.Model;
+using Movie24h_API.Models;
 
 namespace Movie24h_API.Data {
     public class Movie24hContext : DbContext {

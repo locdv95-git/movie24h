@@ -1,50 +1,64 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
-using Movie24h_API.Model;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
+﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
+using Movie24h_API.DTOs;
+using Movie24h_API.Services;
 
 namespace Movie24h_API.Controllers {
     [Route("api/auth")]
     [ApiController]
     public class AuthController : ControllerBase {
 
-        private readonly IConfiguration _config;
+        private readonly AuthService _authService;
 
-        public AuthController(IConfiguration config) {
-            _config = config;
+        public AuthController(AuthService authService) {
+            _authService = authService;
         }
 
         [HttpPost("login")]
-        public IActionResult Login([FromBody] Login login) {
-            if(login.Username == "admin" && login.Password == "password") {
-                var tokenStr = GenerateJwtToken(login.Username);
-                return Ok(new { token = tokenStr });
+        public async Task<IActionResult> Login([FromBody] LoginDTO loginDTO) {
+            var result = new ResponseDTO<string>();
+
+            if(string.IsNullOrEmpty(loginDTO.UserName?.Trim())) {
+                result.Success = false;
+                result.Message = "Username is required";
             }
-            return Unauthorized();
+            else if(string.IsNullOrEmpty(loginDTO.Password?.Trim())) {
+                result.Success = false;
+                result.Message = "Password is required";
+            }
+            else {
+                result = await _authService.LoginAsync(loginDTO.UserName, loginDTO.Password);
+
+                if(result.Success == true) {
+                    return Ok(result);
+                }
+            }
+
+            return Unauthorized(result);
         }
 
-        private string GenerateJwtToken(string username) {
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.UTF8.GetBytes(_config["Jwt:Key"]);
-            var tokenDescriptor = new SecurityTokenDescriptor
-            {
-                Subject = new ClaimsIdentity(new[]
-                {
-                    new Claim(JwtRegisteredClaimNames.Sub, username),
-                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
-                    //new Claim(ClaimTypes.Name, username),
-                    //new Claim(ClaimTypes.Role, "Admin")
-                }),
-                Expires = DateTime.UtcNow.AddMinutes(Convert.ToDouble(_config["Jwt:ExpireMinutes"])),
-                Issuer = _config["Jwt:Issuer"],
-                Audience = _config["Jwt:Audience"],
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-            };
+        [HttpPost("register")]
+        public async Task<IActionResult> Register([FromBody] RegisterDTO registerDTO) {
+            var result = new AuthResultDTO(){ Success = false};
 
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-            return tokenHandler.WriteToken(token);
+            if(string.IsNullOrEmpty(registerDTO.UserName?.Trim())) {
+                result.Message = "Username is required";
+            }
+            else if(string.IsNullOrEmpty(registerDTO.Password?.Trim())) {
+                result.Message = "Password is required";
+            }
+            else if(registerDTO.Password.Length < 8) {
+                result.Message = "Password must be at least 8 characters";
+            }
+            else {
+                result = await _authService.RegisterAsync(registerDTO);
+
+                if(result.Success == true) {
+                    return Ok(result);
+                }
+            }
+
+            return BadRequest(result);
         }
     }
 }

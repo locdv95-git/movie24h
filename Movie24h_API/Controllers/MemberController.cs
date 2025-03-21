@@ -2,13 +2,14 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Movie24h_API.Data;
-using Movie24h_API.Model;
+using Movie24h_API.Models;
 
 namespace Movie24h_API.Controllers {
 
     [Route("api/[controller]")]
     [ApiController]
     public class MemberController : Controller {
+
         private readonly Movie24hContext _context;
 
         public MemberController(Movie24hContext context) {

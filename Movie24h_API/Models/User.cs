@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Movie24h_API.Model {
+namespace Movie24h_API.Models {
     public class User {
         [Key]
         [MaxLength(100)]
