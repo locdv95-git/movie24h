@@ -3,16 +3,20 @@ using Movie24h_API.Models;
 
 namespace Movie24h_API.Data {
     public class Movie24hContext : DbContext {
+
         protected readonly IConfiguration Configuration;
+
         public Movie24hContext(IConfiguration configuration) {
             Configuration = configuration;
         }
+
         protected override void OnConfiguring(DbContextOptionsBuilder options) {
             options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
         }
 
         public DbSet<Member> Members { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<UserToken> UserTokens { get; set; }
 
         // Cach tao khoa ngoai trong DBContext
         //protected override void OnModelCreating(ModelBuilder modelBuilder) {

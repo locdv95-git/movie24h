@@ -4,6 +4,7 @@ using Microsoft.OpenApi.Models;
 using Movie24h_API.Data;
 using Movie24h_API.Helpers;
 using Movie24h_API.Repositories.User;
+using Movie24h_API.Repositories.UserToken;
 using Movie24h_API.Services;
 using System.Text;
 
@@ -17,10 +18,12 @@ builder.Services.AddDbContext<Movie24hContext>();
 #region CONFIG DEPENDENCY INJECTION
 // Register Repository
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IUserTokenRepository, UserTokenRepository>();
 
 // Register Service
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<UserService>();
+builder.Services.AddScoped<UserTokenService>();
 
 builder.Services.AddScoped<JwtHelper>();
 #endregion

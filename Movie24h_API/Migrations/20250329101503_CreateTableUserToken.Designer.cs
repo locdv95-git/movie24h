@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Movie24h_API.Data;
 
@@ -11,9 +12,11 @@ using Movie24h_API.Data;
 namespace Movie24h_API.Migrations
 {
     [DbContext(typeof(Movie24hContext))]
-    partial class Movie24hContextModelSnapshot : ModelSnapshot
+    [Migration("20250329101503_CreateTableUserToken")]
+    partial class CreateTableUserToken
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

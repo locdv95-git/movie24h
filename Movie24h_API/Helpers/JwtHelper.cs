@@ -2,6 +2,7 @@
 using Movie24h_API.Models;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace Movie24h_API.Helpers {
@@ -13,7 +14,12 @@ namespace Movie24h_API.Helpers {
             _config = config;
         }
 
-        public string GenerateJwtToken(User user) {
+        public void GenerateJwtToken(User user, out string accessToken, out string refreshToken) {
+            accessToken = GenerateJwtAccessToken(user);
+            refreshToken = GenerateJwtRefreshToken();
+        }
+
+        public string GenerateJwtAccessToken(User user) {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.UTF8.GetBytes(_config["Jwt:Key"]);
             var tokenDescriptor = new SecurityTokenDescriptor
@@ -33,6 +39,14 @@ namespace Movie24h_API.Helpers {
 
             var token = tokenHandler.CreateToken(tokenDescriptor);
             return tokenHandler.WriteToken(token);
+        }
+
+        public string GenerateJwtRefreshToken() {
+            var randomNumber = new byte[32];
+            using(var rng = RandomNumberGenerator.Create()) {
+                rng.GetBytes(randomNumber);
+            }
+            return Convert.ToBase64String(randomNumber);
         }
     }
 }

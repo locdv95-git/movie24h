@@ -14,7 +14,7 @@ namespace Movie24h_API.Models {
         public string? Gender { get; set; }
         [MaxLength(200)]
         public string? Avatar { get; set; }
-        [MaxLength(12)]
+        [MaxLength(10)]
         public string? PhoneNumber { get; set; }
         [MaxLength(200)]
         public string? Email { get; set; }

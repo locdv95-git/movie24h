@@ -13,8 +13,8 @@ namespace Movie24h_API.Repositories.User {
             return await _context.Users.ToListAsync();
         }
 
-        public async Task<Models.User> GetUserByUsernameAsync(string username) {
-            return await _context.Users.FirstOrDefaultAsync(u => u.UserName == username);
+        public async Task<Models.User> GetUserByUsernameAsync(string userName) {
+            return await _context.Users.FirstOrDefaultAsync(u => u.UserName == userName);
         }
 
         public async Task AddUserAsync(Models.User user) {
